@@ -1,0 +1,147 @@
+\documentclass[twocolumn]{article}
+    \input{./structure.tex}
+    \usepackage{fontspec}
+    \usepackage{indentfirst}
+    \usepackage{booktabs}
+    \setmainfont{思源宋体 CN}
+    \XeTeXlinebreaklocale "zh"
+    \XeTeXlinebreakskip = 0pt plus 1pt
+
+    \title{Game Theory 2018 Fall Final Project \\ \textbf{进化博弈中的复制者动态实验探究}}
+    \author{张义飞 --- 201821080630\\ \texttt{yidadaa@qq.com}}
+    \date{\small{UESTC --- \today}}
+    
+    \begin{document}
+
+    \maketitle
+
+    \section{进化博弈论的起源}
+    进化博弈论最初由R.A. Fisher在尝试解释哺乳动物群体的性别比例总是趋于相等时提出的。Fisher当时面临的课题是：为什么在某些动物群体中大多数雄性不参与交配的情况下，群体的性别比依然保持相等？在这些物种中，不交配的雄性似乎是群体的累赘，对物种的进化没有积极作用。Fisher意识到，如果我们用后代（孙子辈）来衡量个体适应性，那么个体的适应性将取决于人口中雄性和雌性的分布。Fisher指出，这种情况下，进化动态将会使固定在相等数量的雄性和雌性上。也就是说，个体适应性依赖与群体中男女的相对频率，这为进化提供了战略要素。\\
+
+    Fisher的论证在理论上可以理解为博弈，但是他并没有阐明。1961年，R.C. Lewontin在《进化与博弈》中首次明确地将博弈论与进化生物学结合起来。1972年，Maynard Smith在《博弈论与进化对抗》中定义了\textbf{进化稳定策略}（Evolutionarily Stable Strategy，简称ESS）。后来，Maynard Smith and Price的《动物冲突的逻辑》使得ESS的概念广为人知。从此，越来越多的经济学家和社会学家展开了对进化博弈论的研究。
+
+    \section{进化博弈论的主要方法}
+    进化博弈论中有两种方法。第一种方法由Maynard Smith and Price在使用ESS进行理论分析时提出；第二种方法则构造了一个与人口中的策略频率相关的显性模型，并且研究了模型中的进化动力学属性。
+
+    第一种方法提供了研究进化稳定性的静态方法，之所以称之为“静态”，是因为即使给出了进化稳定性的定义，其并不会随着群体的行为改变而改变。与之相反，第二种方法并不直接定义进化稳定性，一旦确定了群体演化模型，那么所有用来研究动态系统的标准稳定性概念都可以直接应用其中。
+    \subsection{进化稳定性的定义}
+    我们使用鹰-鸽博弈（Hawk-Dove Game）作为第一中方法的例子。在这种博弈框架下，两种个体同时竞争总量固定为$V$的资源。每个个体都使用如下描述的策略：
+    \begin{itemize}
+        \item \textbf{鹰} 使用攻击性策略，除非受伤或者胜利，否则不会停止攻击行为；
+        \item \textbf{鸽} 如果对方攻击，则立即撤退。
+    \end{itemize}
+    我们作出如下假设：
+    \begin{itemize}
+        \item[1] 如果两个个体均采用攻击策略，则冲突始终会结束，并且两者受伤概率一致；
+        \item[2] 冲突会引起个体适应度减少恒定值$C$；
+        \item[3] 当鹰遇见鸽子，鹰会获得全部资源；
+        \item[4] 两只鸽子相遇，平分资源。
+    \end{itemize}
+    则支付矩阵如表\ref{hawk-dove}所示。
+
+    \begin{table}
+        \centering
+        \begin{tabular}{c|cc}
+            \hline
+            & 鹰 & 鸽子 \\
+            \hline
+            鹰 & $1/2(V-C)$ & V \\
+            鸽子 & 0 & $V/2$ \\
+            \hline
+        \end{tabular}
+        \caption{鹰-鸽博弈的支付矩阵}
+        \label{hawk-dove}
+    \end{table}
+    如果一个策略是进化稳定的，则当群体中的所有个体都完全遵循其策略时，没有突变体（使用新策略的个体）能成功入侵。下面给出形式化表述：使用$\Delta F(s_1, s_2)$表示遵循策略$s_1$的个体与遵循策略$s_2$的个体竞争时的个体适应性变化量；使用$F(s)$表示遵循策略$s$的群体适应性之和；假设每种群体拥有初始适应性$F_0$。如果使用$\sigma$表示进化稳定策略，而$\mu$表示突变体，则有：
+    \begin{equation}
+        \begin{split}
+            F(\sigma)=F_0 + (1-p)\Delta F(\sigma, \sigma) + p\Delta F(\sigma, \mu)\\
+            F(\sigma)=F_0 + (1-p)\Delta F(\sigma, \sigma) + p\Delta F(\sigma, \mu)
+        \end{split}
+    \end{equation}
+    其中$p$表示群体中突变体的比例。
+
+    由于$\sigma$是进化稳定的，则遵循$\sigma$的个体适应性一定大于遵循的$\mu$的个体，则有$F(\sigma)>F(\mu)$。由于$p$很小，则还需满足以下条件中的一个：
+    \begin{equation}
+        \begin{split}
+            \Delta F(\sigma, \sigma)>&\Delta F(\mu, \sigma) \\
+            \Delta F(\sigma, \sigma)=&\Delta F(\mu, \sigma) 且 \Delta F(\sigma, \mu)>\Delta F(\mu, \mu)
+        \end{split}
+    \end{equation}
+    即在与原生策略群体对抗时，原生策略群体一定能获得比突变体更高的收益；如果两者收益相等，则在与突变体对抗时，原生群体也会比突变体获得更高的收益。
+
+    通过给出进化稳定策略的形式化表述，我们可以确信，在鹰-鸽游戏中，鸽子的策略不是进化稳定的，因为鸽子群体可以被鹰策略入侵。如果竞争资源V大于受伤代价C，则鹰策略是进化稳定的。
+
+    \subsection{为群体指定动态性}
+    \label{prisoner}
+    我们使用著名的囚徒困境来作为第二种方法的例子。在囚徒困境中，每个个体都可以选择“合作”和“背叛”两种策略，表\ref{prisoners-dilemma}给出了囚徒困境的一般形式的支付矩阵。
+    \begin{table}
+        \centering
+        \begin{tabular}{c|cc}
+            \hline
+            & 合作 & 背叛 \\
+            \hline
+            合作 & $(R, R')$ & $(S, T')$ \\
+            背叛 & $(T, S')$ & $(P, P')$ \\
+            \hline
+        \end{tabular}
+        \caption{囚徒困境的支付矩阵}
+        \label{prisoners-dilemma}
+    \end{table}
+    其中$T>R>P>S$且$T'>R'>P'>S'$。假定此支付矩阵在群体中保持一致。
+
+    如果群体中个体持续与他人进行博弈，那么群体中使用各策略的个体比例将会如何变化？我们可以从自然群体中的引入以下假设：首先，我们假设群体足够大，这样可以使用合作和背叛的个体比例来描述群体状态，我们使用$p_c$和$p_d$来分别描述合作者和背叛者的比例；然后，我们使用$W_C$和$W_D$来表示合作者和背叛者群体的平均适应性，并使用$\bar W$表示整个群体的平均适应性。则$W_C$和$W_D$以及$\bar W$表示如下：
+    \begin{equation}
+        \begin{split}
+            W_C&=F_0+p_c\Delta F(C,C)+p_d\Delta F(C,D)\\
+            W_D&=F_0+p_c\Delta F(D,C)+p_d\Delta F(D,D)\\
+            \bar W&=p_cW_C+p_dW_D
+        \end{split}
+    \end{equation}
+
+    然后，我们假设下一代群体中合作者和背叛者的分布依赖于当前代中合作者和背叛者的分布：
+    \begin{equation}
+        \begin{split}
+            p_c'&=\frac{p_cW_C}{\bar W}\\
+            p_d'&=\frac{p_dW_D}{\bar W}
+        \end{split}
+    \end{equation}
+    重写以上公式为：
+    \begin{equation}
+        \begin{split}
+            (p_c'-p_c)&=\frac{p_cW_C-\bar W}{\bar W}\\
+            (p_d'-p_d)&=\frac{p_dW_D-\bar W}{\bar W}
+        \end{split}
+    \end{equation}
+    如果我们假设每一代之间，各个策略占比变化很小，则得到微分方程：
+    \begin{equation}
+        \begin{split}
+            \frac{dp_c}{dt}&=\frac{p_cW_C-\bar W}{\bar W}\\
+            \frac{dp_d}{dt}&=\frac{p_dW_D-\bar W}{\bar W}
+        \end{split}
+    \end{equation}
+    由$W_C$和$W_D$的构成：
+    \begin{equation}
+        \begin{split}
+            W_C&=F_0+p_cR+p_dS\\
+            W_D&=F_0+p_cT+p_dP
+        \end{split}
+    \end{equation}
+    且由于$T>R, P>S$，则有$W_D>\bar W>W_C$，则可以得到：
+    \begin{equation}
+        \begin{split}
+            \frac{W_D-\bar W}{\bar W}>0\\
+            \frac{W_C-\bar W}{\bar W}<0\\
+        \end{split}
+    \end{equation}
+    即随着时间推移，群体中背叛者的数量会逐渐增加，而合作者的数量则会逐渐减少。
+
+    \section{复制者动态的实验模拟}
+    前文中，我们已经介绍了进化博弈论中的一些重要概念，本节我们在此概念的基础上进行实验模拟。
+
+    在群体演化过程中，个体策略的更新使用复制者动态进行更新，即每个个体会在每一轮博弈结束后，观察其邻近个体的收益，并选择收益最高的邻居的策略作为其下一轮博弈的策略。
+
+    \subsection{囚徒困境的博弈模拟}
+    根据\ref{prisoner}中描述的囚徒困境博弈，我们使用棋盘格局来模拟每个个体之间的博弈，在$200\times 200$的棋盘中，每个个体与其周围的8个邻居（边界上的个体的邻居会少于8）进行博弈，然后根据支付矩阵获得收益，每轮博弈后，每个个体使用复制者动态更新自身策略。
+
+    \end{document}
