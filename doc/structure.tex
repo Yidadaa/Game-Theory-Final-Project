@@ -27,8 +27,18 @@
 
 \usepackage[framemethod=tikz]{mdframed} % Allows defining custom boxed/framed environments
 
+\definecolor{codegreen}{rgb}{0,0.2,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.5,0.2,0.5}
+\definecolor{codekeyword}{rgb}{0.5,0,0.22}
+
 \usepackage{listings} % File listings, with syntax highlighting
 \lstset{
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{codekeyword},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
 	basicstyle=\ttfamily, % Typeset listings in monospace font
 }
 
@@ -225,3 +235,16 @@
 }{
 	\end{mdframed}
 }
+
+\usepackage{fontspec}
+\usepackage{indentfirst}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage{url}
+\usepackage{flushend, cuted}
+\setmainfont{思源宋体 CN}
+\XeTeXlinebreaklocale "zh"
+\XeTeXlinebreakskip = 0pt plus 1pt
+
+\usepackage{color}
