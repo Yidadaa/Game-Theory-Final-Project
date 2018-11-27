@@ -11,7 +11,7 @@ from matplotlib import pyplot as plt
 
 N = 100
 
-def simulate(payoffs, round=10, skip=1):
+def simulate(payoffs, rounds=10, skip=1):
   """
   Simulate the generation with payoff matrix T/R/P/S.
 
